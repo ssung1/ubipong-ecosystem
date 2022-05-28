@@ -1,0 +1,104 @@
+# General tip: if using Windows, run Docker from within WSL; it understands Linux paths better
+services:
+  ubipong-api-dev:
+    image: openjdk:15
+    working_dir: /mnt/ubipong-api
+    command: 
+      - "/bin/bash"
+      - "-c"
+      - "while true; do sleep 1; done"
+    volumes:
+      - ./ubipong-api:/mnt/ubipong-api
+
+  ubipong-api:
+    image: openjdk:15
+    working_dir: /mnt/ubipong-api
+    command: 
+      - "java"
+      - "@javaOptions"
+      - "-jar"
+      - "tournament-manager/build/libs/ubipong-DEV_SNAPSHOT.jar"
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - ./ubipong-api:/mnt/ubipong-api
+
+  ubipong-test-dev:
+    image: node:16.15.0
+    working_dir: /mnt/ubipong-test
+    command: 
+      - "/bin/bash"
+      - "-c"
+      - "while true; do sleep 1; done"
+    volumes:
+      - ./ubipong-test:/mnt/ubipong-test
+    environment:
+      CHALLONGE_API_KEY: ${CHALLONGE_API_KEY}
+
+  ubipong-test:
+    image: node:16.15.0
+    working_dir: /mnt/ubipong-test
+    command:
+      - "/bin/bash"
+      - "-c"
+      - "npm install && npm test"
+    volumes:
+      - ./ubipong-test:/mnt/ubipong-test
+    environment:
+      CHALLONGE_API_KEY: ${CHALLONGE_API_KEY}
+
+  # regular service
+  pubsub:
+    image: google/cloud-sdk
+    command:
+      - /usr/lib/google-cloud-sdk/platform/pubsub-emulator/bin/cloud-pubsub-emulator
+      - --host=0.0.0.0
+      - --port=8085
+    ports:
+      - 8085:8085
+  
+  # often a regular service needs some kind of setup script
+  pubsub-init:
+    build:
+      context: ./pubsub-init
+    command: 
+      - "/bin/bash"
+      - "-c"
+      - "while true; do node create-topic; sleep 10; done"
+    environment:
+      PUBSUB_EMULATOR_HOST: ${PUBSUB_EMULATOR_HOST}
+      PUBSUB_PROJECT_ID: ${PUBSUB_PROJECT_ID}
+    volumes:
+      - ./pubsub-init/script:/mnt/script
+
+  ubipong-ui-ng-dev:
+    image: node:16.15.0
+    working_dir: /mnt/ubipong-ui-ng
+    command: 
+      - "/bin/bash"
+      - "-c"
+      - "while true; do sleep 1; done"
+    ports:
+      - 4200:4200
+    volumes:
+      - ./ubipong-ui-ng:/mnt/ubipong-ui-ng
+    environment:
+      CYPRESS_CHALLONGE_API_KEY: ${CYPRESS_CHALLONGE_API_KEY}
+
+  mysql:
+    build:
+      context: ./mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+
+  # for some reason JDBC login fails unless the user logs in through mysql client first
+  # so we are just loggin in periodically, as a workaround
+  mysql-init:
+    image: mysql
+    command:
+      - "/bin/bash"
+      - "-c"
+      - "while true; do mysql -h mysql -u ubipong --password=secret ubipong -e 'select a from b'; sleep 10; done"
+    restart: always
