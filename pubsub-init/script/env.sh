@@ -1,0 +1,2 @@
+export PUBSUB_EMULATOR_HOST=pubsub:8085
+export PUBSUB_PROJECT_ID=gaeso
