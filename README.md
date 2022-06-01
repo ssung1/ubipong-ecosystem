@@ -59,3 +59,21 @@ Stop
 ```bash
 docker compose down --remove-orphans
 ```
+
+Special Notes on `ubipong-api` Service
+--------------------------------------
+
+To run this, make sure the Java options are saved in the `javaOptions` file.
+The file should look like this:
+
+```properties
+-Dspring.profiles.active=local
+-Dchallonge.api-key={CHALLONGE_API_KE}}
+-Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource
+-Dspring.datasource.url=jdbc:mysql://mysql/ubipong?useSSL=false&allowPublicKeyRetrieval=true
+-Dspring.datasource.username=ubipong
+-Dspring.datasource.password=secret
+```
+
+(pay special attention to the MySQL options)
+
