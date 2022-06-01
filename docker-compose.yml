@@ -34,6 +34,7 @@ services:
     volumes:
       - ./ubipong-test:/mnt/ubipong-test
     environment:
+      UBIPONG_API_HOST: ${UBIPONG_API_HOST}
       CHALLONGE_API_KEY: ${CHALLONGE_API_KEY}
 
   ubipong-test:
@@ -46,6 +47,7 @@ services:
     volumes:
       - ./ubipong-test:/mnt/ubipong-test
     environment:
+      UBIPONG_API_HOST: ${UBIPONG_API_HOST}
       CHALLONGE_API_KEY: ${CHALLONGE_API_KEY}
 
   # regular service
