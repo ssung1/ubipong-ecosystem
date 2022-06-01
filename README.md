@@ -5,17 +5,6 @@ This contains the Docker compose configurations to run the Ubipong system,
 including the database, REST API, and UI.  However, we still have to use the
 real challonge.com.
 
-# Environment
-# -----------
-# 
-# Run 
-# 
-# ```bash
-# docker compose ps
-# ```
-# 
-# to see which environment variables need to be set.
-
 Services
 --------
 
@@ -44,13 +33,24 @@ There are a few categories of services:
   services, but we generally want to run it in the foreground using
   `docker compose up {service}`
 
+Environment
+-----------
+
+Run 
+
+```bash
+docker compose ps
+```
+
+to see which environment variables need to be set.
+
 Start
 -----
 
 Choose a service to start.  Some images require checkout 
 
 ```bash
-docker composue up -d {service}
+docker compose up -d {service}
 ```
 
 Stop
