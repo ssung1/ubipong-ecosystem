@@ -98,7 +98,7 @@ services:
   # for some reason JDBC login fails unless the user logs in through mysql client first
   # so we are just loggin in periodically, as a workaround
   mysql-init:
-    image: mysql
+    image: mysql:5.6.50
     command:
       - "/bin/bash"
       - "-c"
