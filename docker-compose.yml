@@ -69,7 +69,7 @@ services:
       - "-c"
       - "while true; do node create-topic; sleep 10; done"
     environment:
-      PUBSUB_EMULATOR_HOST: ${PUBSUB_EMULATOR_HOST}
+      PUBSUB_EMULATOR_HOST: pubsub:8085
       PUBSUB_PROJECT_ID: ${PUBSUB_PROJECT_ID}
     volumes:
       - ./pubsub-init/script:/mnt/script
