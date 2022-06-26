@@ -59,7 +59,7 @@ services:
 
   # regular service
   pubsub:
-    image: google/cloud-sdk
+    image: google/cloud-sdk:391.0.0
     command:
       - /usr/lib/google-cloud-sdk/platform/pubsub-emulator/bin/cloud-pubsub-emulator
       - --host=0.0.0.0
