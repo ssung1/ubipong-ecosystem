@@ -17,7 +17,12 @@ services:
     working_dir: /mnt/ubipong-api
     command: 
       - "java"
-      - "@javaOptions"
+      - "-Dspring.profiles.active=local"
+      - "-Dchallonge.api-key=${CHALLONGE_API_KEY}"
+      - "-Dspring.datasource.url=jdbc:mysql://mysql/ubipong?useSSL=false&allowPublicKeyRetrieval=true"
+      - "-Dspring.datasource.username=ubipong"
+      - "-Dspring.datasource.password=secret"
+      - "-Dspring.jpa.hibernate.ddl-auto=validate"
       - "-jar"
       - "tournament-manager/build/libs/ubipong-DEV_SNAPSHOT.jar"
     ports:
