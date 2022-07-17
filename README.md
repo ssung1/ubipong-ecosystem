@@ -1,12 +1,72 @@
-Ubipong Ecosystem
-=================
+# Ubipong Ecosystem
 
 This contains the Docker compose configurations to run the Ubipong system,
 including the database, REST API, and UI.  However, we still have to use the
-real challonge.com.
+real challonge.com.  These are the components:
 
-Services
---------
+- `mysql`: database for the API
+- `ubipong-api`: API of the tournament manager (see <https://github.com/ssung1/ubipong-api>)
+- `ubipong-test`: automated testing of the API (see <https://github.com/ssung1/ubipong-test>)
+- `ubipong-ui-ng`: UI (plus test) for the tournament manager (see <https://github.com/ssung1/ubipong-ui-ng>)
+
+## System Diagram
+
+```mermaid
+flowchart LR
+User((User)) ==> UI
+UI ==> API
+API ==> MySQL
+APITest[API test] ==> API
+
+style User fill:none
+
+click UI "https://github.com/ssung1/ubipong-ui-ng" _blank
+click API "https://github.com/ssung1/ubipong-api" _blank
+click APITest "https://github.com/ssung1/ubipong-test" _blank
+```
+
+## Quick Start
+
+Checkout the components as subdirectories.
+
+Start the MySQL initialization service (this is required to allow login from API)
+
+```sh
+docker compose up -d mysql-init
+```
+
+Start MySQL
+
+```sh
+docker compose up -d mysql
+```
+
+Build `ubipong-api`
+
+```sh
+docker compose run ubipong-api ./gradlew build
+```
+
+Start `ubipong-api`
+
+```sh
+docker compose up -d ubipong-api
+```
+
+Test with `ubipong-test`
+
+```sh
+docker compose up ubipong-test
+```
+
+Go to the `ubipong-ui-ng` directory and play with the UI
+
+```sh
+cd ubipong-ui-ng
+npm start
+```
+
+## Services
 
 There are a few categories of services:
 
@@ -33,8 +93,7 @@ There are a few categories of services:
   services, but we generally want to run it in the foreground using
   `docker compose up {service}`
 
-Environment
------------
+## Environment
 
 Run 
 
@@ -44,8 +103,7 @@ docker compose ps
 
 to see which environment variables need to be set.
 
-Start
------
+## Start
 
 Choose a service to start.  Some images require checkout 
 
@@ -53,27 +111,8 @@ Choose a service to start.  Some images require checkout
 docker compose up -d {service}
 ```
 
-Stop
-----
+## Stop
 
 ```bash
 docker compose down --remove-orphans
 ```
-
-Special Notes on `ubipong-api` Service
---------------------------------------
-
-To run this, make sure the Java options are saved in the `javaOptions` file.
-The file should look like this:
-
-```properties
--Dspring.profiles.active=local
--Dchallonge.api-key={CHALLONGE_API_KE}}
--Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource
--Dspring.datasource.url=jdbc:mysql://mysql/ubipong?useSSL=false&allowPublicKeyRetrieval=true
--Dspring.datasource.username=ubipong
--Dspring.datasource.password=secret
-```
-
-(pay special attention to the MySQL options)
-
