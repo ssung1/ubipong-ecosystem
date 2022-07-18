@@ -23,6 +23,8 @@ services:
       - "-Dspring.datasource.username=ubipong"
       - "-Dspring.datasource.password=secret"
       - "-Dspring.jpa.hibernate.ddl-auto=validate"
+      - "-Dspring.security.oauth2.resourceserver.jwt.issuer-uri=${OAUTH_ISSUER_URI}"
+      - "-Dspring.security.oauth2.resourceserver.jwt.jwk-set-uri=${OAUTH_JWK_SET_URI}"
       - "-jar"
       - "tournament-manager/build/libs/ubipong-DEV_SNAPSHOT.jar"
     ports:
