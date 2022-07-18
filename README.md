@@ -44,7 +44,8 @@ docker compose up -d mysql
 Build `ubipong-api`
 
 ```sh
-docker compose run ubipong-api ./gradlew build
+docker compose up -d ubipong-api-dev
+docker compose exec ubipong-api-dev ./gradlew build
 ```
 
 Start `ubipong-api`
